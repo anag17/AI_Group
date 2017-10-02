@@ -13,13 +13,22 @@ public class SearchClient {
 	public Node initialState;
 
 	// Moved here from the Node class so that every node doesn't keep a copy
-	public static int MAX_ROW = 70;
-	public static int MAX_COL = 70;
+	public static int MAX_ROW = 0;
+	public static int MAX_COL = 0;
+
 	public static boolean[][] walls = new boolean[MAX_ROW][MAX_COL];
 	public static char[][] goals = new char[MAX_ROW][MAX_COL];
 
+	public void RowColFinder (String line) {
+
+		if (line.length() > MAX_COL) {
+			MAX_COL = line.length();
+		}
+		MAX_ROW ++;
+	}
 
 	public SearchClient(BufferedReader serverMessages) throws Exception {
+
 		// Read lines specifying colors
 		String line = serverMessages.readLine();
 		if (line.matches("^[a-z]+:\\s*[0-9A-Z](\\s*,\\s*[0-9A-Z])*\\s*$")) {
@@ -32,6 +41,7 @@ public class SearchClient {
 		this.initialState = new Node(null);
 
 		while (!line.equals("")) {
+			RowColFinder(line);
 			for (int col = 0; col < line.length(); col++) {
 				char chr = line.charAt(col);
 
