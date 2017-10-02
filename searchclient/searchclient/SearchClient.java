@@ -12,6 +12,13 @@ import searchclient.Heuristic.*;
 public class SearchClient {
 	public Node initialState;
 
+	// Moved here from the Node class so that every node doesn't keep a copy
+	public static int MAX_ROW = 70;
+	public static int MAX_COL = 70;
+	public static boolean[][] walls = new boolean[MAX_ROW][MAX_COL];
+	public static char[][] goals = new char[MAX_ROW][MAX_COL];
+
+
 	public SearchClient(BufferedReader serverMessages) throws Exception {
 		// Read lines specifying colors
 		String line = serverMessages.readLine();
@@ -29,7 +36,7 @@ public class SearchClient {
 				char chr = line.charAt(col);
 
 				if (chr == '+') { // Wall.
-					this.initialState.walls[row][col] = true;
+					this.walls[row][col] = true;
 				} else if ('0' <= chr && chr <= '9') { // Agent.
 					if (agentFound) {
 						System.err.println("Error, not a single agent level");
@@ -41,7 +48,7 @@ public class SearchClient {
 				} else if ('A' <= chr && chr <= 'Z') { // Box.
 					this.initialState.boxes[row][col] = chr;
 				} else if ('a' <= chr && chr <= 'z') { // Goal.
-					this.initialState.goals[row][col] = chr;
+					this.goals[row][col] = chr;
 				} else if (chr == ' ') {
 					// Free space.
 				} else {
