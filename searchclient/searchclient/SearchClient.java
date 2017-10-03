@@ -30,7 +30,6 @@ public class SearchClient {
 
 		int row = 0;
 		boolean agentFound = false;
-		this.initialState = new Node(null);
 
 		LinkedList<String> savedLines = new LinkedList<String>();
 		int longestLine = 0;
@@ -46,14 +45,12 @@ public class SearchClient {
 			rows++;
 		}
 
-		System.err.println(rows);
-		System.err.println(longestLine);
-
 		MAX_ROW = rows;
 		MAX_COL = longestLine;
 		walls = new boolean[MAX_ROW][MAX_COL];
 		goals = new char[MAX_ROW][MAX_COL];
-		Node.boxes = new char[MAX_ROW][MAX_COL];
+		this.initialState = new Node(null);
+		//initialState.boxes = new char[MAX_ROW][MAX_COL];
 		row = 0;
 
 		for(String newLine : savedLines) {

@@ -24,7 +24,7 @@ public class Node {
 	// searchclient.walls[row][col] is true if there's a wall at (row, col)
 	//
 
-	public static char[][] boxes;
+	public char[][] boxes;
 
 	public Node parent;
 	public Command action;
@@ -34,7 +34,7 @@ public class Node {
 	private int _hash = 0;
 
 	public Node(Node parent) {
-		//this.boxes = new char[70][70];
+		this.boxes = new char[SearchClient.MAX_ROW][SearchClient.MAX_COL];
 		this.parent = parent;
 		if (parent == null) {
 			this.g = 0;
