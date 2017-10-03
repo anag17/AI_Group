@@ -13,19 +13,11 @@ public class SearchClient {
 	public Node initialState;
 
 	// Moved here from the Node class so that every node doesn't keep a copy
-	public static int MAX_ROW = 0;
-	public static int MAX_COL = 0;
+	public static int MAX_ROW;
+	public static int MAX_COL;
 
-	public static boolean[][] walls = new boolean[MAX_ROW][MAX_COL];
-	public static char[][] goals = new char[MAX_ROW][MAX_COL];
-
-	public void RowColFinder (String line) {
-
-		if (line.length() > MAX_COL) {
-			MAX_COL = line.length();
-		}
-		MAX_ROW ++;
-	}
+	public static boolean[][] walls;
+	public static char[][] goals;
 
 	public SearchClient(BufferedReader serverMessages) throws Exception {
 
@@ -40,10 +32,37 @@ public class SearchClient {
 		boolean agentFound = false;
 		this.initialState = new Node(null);
 
+		LinkedList<String> savedLines = new LinkedList<String>();
+		int longestLine = 0;
+		int rows = 0;
+
 		while (!line.equals("")) {
-			RowColFinder(line);
-			for (int col = 0; col < line.length(); col++) {
-				char chr = line.charAt(col);
+			savedLines.add(line);
+			if(line.length() > longestLine){
+				longestLine = line.length();
+			}
+			line = serverMessages.readLine();
+			row++;
+			rows++;
+		}
+
+		System.err.println(rows);
+		System.err.println(longestLine);
+
+		MAX_ROW = rows;
+		MAX_COL = longestLine;
+		walls = new boolean[MAX_ROW][MAX_COL];
+		goals = new char[MAX_ROW][MAX_COL];
+		Node.boxes = new char[MAX_ROW][MAX_COL];
+		row = 0;
+
+		for(String newLine : savedLines) {
+			for (int col = 0; col < newLine.length(); col++) {
+
+				//System.out.println(col);
+				//System.out.println(row);
+
+				char chr = newLine.charAt(col);
 
 				if (chr == '+') { // Wall.
 					this.walls[row][col] = true;
@@ -56,6 +75,8 @@ public class SearchClient {
 					this.initialState.agentRow = row;
 					this.initialState.agentCol = col;
 				} else if ('A' <= chr && chr <= 'Z') { // Box.
+					System.err.println(col);
+					System.err.println(row);
 					this.initialState.boxes[row][col] = chr;
 				} else if ('a' <= chr && chr <= 'z') { // Goal.
 					this.goals[row][col] = chr;
@@ -66,9 +87,9 @@ public class SearchClient {
 					System.exit(1);
 				}
 			}
-			line = serverMessages.readLine();
 			row++;
 		}
+
 	}
 
 	public LinkedList<Node> Search(Strategy strategy) throws IOException {

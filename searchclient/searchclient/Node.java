@@ -11,9 +11,6 @@ import searchclient.Command.Type;
 public class Node {
 	private static final Random RND = new Random(1);
 
-	public static int MAX_ROW = 70;
-	public static int MAX_COL = 70;
-
 	public int agentRow;
 	public int agentCol;
 
@@ -23,11 +20,11 @@ public class Node {
 	// Row 2: (2,0) (2,1) (2,2) (2,3) ...
 	// ...
 	// (Start in the top left corner, first go down, then go right)
-	// E.g. searchclient.walls[2] is an array of booleans having size MAX_COL.
+	// E.g. searchclient.walls[2] is an array of booleans having size SearchClient.MAX_COL.
 	// searchclient.walls[row][col] is true if there's a wall at (row, col)
 	//
 
-	public char[][] boxes = new char[MAX_ROW][MAX_COL];
+	public static char[][] boxes;
 
 	public Node parent;
 	public Command action;
@@ -37,6 +34,7 @@ public class Node {
 	private int _hash = 0;
 
 	public Node(Node parent) {
+		//this.boxes = new char[70][70];
 		this.parent = parent;
 		if (parent == null) {
 			this.g = 0;
@@ -54,8 +52,8 @@ public class Node {
 	}
 
 	public boolean isGoalState() {
-		for (int row = 1; row < MAX_ROW - 1; row++) {
-			for (int col = 1; col < MAX_COL - 1; col++) {
+		for (int row = 1; row < SearchClient.MAX_ROW - 1; row++) {
+			for (int col = 1; col < SearchClient.MAX_COL - 1; col++) {
 				char g = SearchClient.goals[row][col];
 				char b = Character.toLowerCase(boxes[row][col]);
 				if (g > 0 && b != g) {
@@ -130,10 +128,10 @@ public class Node {
 
 	private Node ChildNode() {
 		Node copy = new Node(this);
-		for (int row = 0; row < MAX_ROW; row++) {
-			System.arraycopy(SearchClient.walls[row], 0, SearchClient.walls[row], 0, MAX_COL);
-			System.arraycopy(this.boxes[row], 0, copy.boxes[row], 0, MAX_COL);
-			System.arraycopy(SearchClient.goals[row], 0, SearchClient.goals[row], 0, MAX_COL);
+		for (int row = 0; row < SearchClient.MAX_ROW; row++) {
+			System.arraycopy(SearchClient.walls[row], 0, SearchClient.walls[row], 0, SearchClient.MAX_COL);
+			System.arraycopy(this.boxes[row], 0, copy.boxes[row], 0, SearchClient.MAX_COL);
+			System.arraycopy(SearchClient.goals[row], 0, SearchClient.goals[row], 0, SearchClient.MAX_COL);
 		}
 		return copy;
 	}
@@ -186,11 +184,11 @@ public class Node {
 	@Override
 	public String toString() {
 		StringBuilder s = new StringBuilder();
-		for (int row = 0; row < MAX_ROW; row++) {
+		for (int row = 0; row < SearchClient.MAX_ROW; row++) {
 			if (!SearchClient.walls[row][0]) {
 				break;
 			}
-			for (int col = 0; col < MAX_COL; col++) {
+			for (int col = 0; col < SearchClient.MAX_COL; col++) {
 				if (this.boxes[row][col] > 0) {
 					s.append(this.boxes[row][col]);
 				} else if (SearchClient.goals[row][col] > 0) {
