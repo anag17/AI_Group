@@ -5,12 +5,25 @@ import java.util.Comparator;
 import searchclient.NotImplementedException;
 
 public abstract class Heuristic implements Comparator<Node> {
+
+	int[] goalPos;
+
 	public Heuristic(Node initialState) {
 		// Here's a chance to pre-process the static parts of the level.
+		char[][] goals = SearchClient.goals;
+		goalPos = new int[2];
+		for(int i = 0; i < goals.length; i++) {
+			for(int j = 0; j < goals[0].length; j++) {
+				if('a' <= goals[i][j] && goals[i][j] <= 'z') {
+					goalPos[0] = i;
+					goalPos[1] = j;
+				}
+			}
+		}
 	}
 
 	public int h(Node n) {
-		throw new NotImplementedException();
+		return 4;
 	}
 
 	public abstract int f(Node n);
