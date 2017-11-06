@@ -23,12 +23,12 @@ public abstract class Heuristic implements Comparator<Node> {
 	}
 
 	public int h(Node n) {
-		char[][] goals = SearchClient.goals;
+		char[][] boxes = n.boxes;
 		int boxX = 0;
 		int boxY = 0;
-		for(int i = 0; i < goals.length; i++) {
-			for(int j = 0; j < goals[0].length; j++) {
-				if('A' <= goals[i][j] && goals[i][j] <= 'Z') {
+		for(int i = 0; i < boxes.length; i++) {
+			for(int j = 0; j < boxes[0].length; j++) {
+				if('A' <= boxes[i][j] && boxes[i][j] <= 'Z') {
 					boxY = i;
 					boxX = j;
 				}
