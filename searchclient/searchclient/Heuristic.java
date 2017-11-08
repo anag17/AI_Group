@@ -34,7 +34,7 @@ public abstract class Heuristic implements Comparator<Node> {
 				}
 			}
 		}
-		return distance(boxX, boxY, goalPosX, goalPosY);
+		return distance(boxX, boxY, goalPosX, goalPosY)+distance(n.agentCol, n.agentRow, boxX, boxY);
 	}
 
 	private int distance(int x1, int y1, int x2, int y2) {
