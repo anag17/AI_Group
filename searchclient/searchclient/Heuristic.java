@@ -1,13 +1,15 @@
 package searchclient;
 
 import java.util.Comparator;
+import java.util.List;
+import java.util.ArrayList;
 
 import searchclient.NotImplementedException;
 
 public abstract class Heuristic implements Comparator<Node> {
 
-	private int goalPosX;
-	private int goalPosY;
+	private List<Integer> goalPositions = new ArrayList<Integer>();
+	private List<Integer> boxPositions;
 
 	public Heuristic(Node initialState) {
 		// Here's a chance to pre-process the static parts of the level.
@@ -15,26 +17,34 @@ public abstract class Heuristic implements Comparator<Node> {
 		for(int i = 0; i < goals.length; i++) {
 			for(int j = 0; j < goals[0].length; j++) {
 				if('a' <= goals[i][j] && goals[i][j] <= 'z') {
-					goalPosY = i;
-					goalPosX = j;
+					goalPositions.add(i);
+					goalPositions.add(j);
 				}
 			}
 		}
 	}
 
 	public int h(Node n) {
+		int sum = 0;
 		char[][] boxes = n.boxes;
-		int boxX = 0;
-		int boxY = 0;
+		boxPositions = new ArrayList<Integer>();
 		for(int i = 0; i < boxes.length; i++) {
 			for(int j = 0; j < boxes[0].length; j++) {
 				if('A' <= boxes[i][j] && boxes[i][j] <= 'Z') {
-					boxY = i;
-					boxX = j;
+					boxPositions.add(i);
+					boxPositions.add(j);
 				}
 			}
 		}
-		return distance(boxX, boxY, goalPosX, goalPosY)+distance(n.agentCol, n.agentRow, boxX, boxY);
+		for(int i = 0; i < goalPositions.size(); i += 2) {
+			int posX = goalPositions.get(i);
+			int posY = goalPositions.get(i + 1);
+			int boxPosX = boxPositions.get(i);
+			int boxPosY = boxPositions.get(i + 1);
+			sum += distance(posX, posY, boxPosX, boxPosY);
+		}
+		//return distance(boxX, boxY, goalPosX, goalPosY)+distance(n.agentCol, n.agentRow, boxX, boxY);
+		return sum;
 	}
 
 	private int distance(int x1, int y1, int x2, int y2) {
